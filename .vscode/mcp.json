@@ -1,0 +1,9 @@
+{
+    "servers": {
+        "simple-server": {
+            "type": "stdio",
+            "command": "C:\\mcp-servers\\simpleServer\\McpSQLServerApp.exe",
+            "args": []
+        }
+    }
+}

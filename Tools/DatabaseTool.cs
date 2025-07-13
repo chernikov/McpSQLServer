@@ -98,13 +98,13 @@ public static class DatabaseTool
     }
 
     [McpServerTool, Description("Executes a SELECT query and returns the results as a list of dictionaries. Accepts query and optional connection string.")]
-    public static List<Dictionary<string, object>> QueryData(string selectQuery, string? connectionString = null)
+    public static List<Dictionary<string, object?>> QueryData(string selectQuery, string? connectionString = null)
     {
         var connStr = string.IsNullOrWhiteSpace(connectionString)
               ? ConfigHelper.GetDefaultConnectionString()
               : connectionString;
 
-        var results = new List<Dictionary<string, object>>();
+        var results = new List<Dictionary<string, object?>>();
         try
         {
             using var connection = new SqlConnection(connStr);
@@ -113,10 +113,10 @@ public static class DatabaseTool
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                var row = new Dictionary<string, object>();
+                var row = new Dictionary<string, object?>();
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
-                    row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                    row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i) as object;
                 }
                 results.Add(row);
             }
@@ -124,7 +124,31 @@ public static class DatabaseTool
         }
         catch (Exception ex)
         {
-            return new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Error", ex.Message } } };
+            return new List<Dictionary<string, object?>> { new Dictionary<string, object?> { { "Error", ex.Message } } };
+        }
+    }
+
+    [McpServerTool, Description("Lists all databases on the server. Optionally accepts a connection string.")]
+    public static List<string> ListDatabases(string? connectionString = null)
+    {
+        var connStr = string.IsNullOrWhiteSpace(connectionString)
+                   ? ConfigHelper.GetDefaultConnectionString()
+                   : connectionString;
+        var databases = new List<string>();
+        try
+        {
+            using var connection = new SqlConnection(connStr);
+            connection.Open();
+            var schema = connection.GetSchema("Databases");
+            foreach (DataRow row in schema.Rows)
+            {
+                databases.Add(row["database_name"].ToString() ?? "");
+            }
+            return databases;
+        }
+        catch (Exception ex)
+        {
+            return new List<string> { $"Error: {ex.Message}" };
         }
     }
 

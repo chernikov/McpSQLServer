@@ -24,16 +24,16 @@ public static class QueryTool
             // Для SELECT-запитів
             if (sqlQuery.TrimStart().StartsWith("SELECT", StringComparison.OrdinalIgnoreCase))
             {
-                var results = new List<Dictionary<string, object>>();
+                var results = new List<Dictionary<string, object?>>();
                 using var reader = command.ExecuteReader();
                 
                 while (reader.Read())
                 {
-                    var row = new Dictionary<string, object>();
+                    var row = new Dictionary<string, object?>();
                     for (int i = 0; i < reader.FieldCount; i++)
                     {
                         string columnName = reader.GetName(i);
-                        object value = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                        object? value = reader.IsDBNull(i) ? null : reader.GetValue(i);
                         row[columnName] = value;
                     }
                     results.Add(row);

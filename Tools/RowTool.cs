@@ -26,10 +26,10 @@ public static class RowTool
         if (string.IsNullOrWhiteSpace(tableName) || string.IsNullOrWhiteSpace(keyColumn) || string.IsNullOrWhiteSpace(columnValuesJson))
             return "Error: Table name, key column, and column values (as JSON) are required.";
 
-        Dictionary<string, object> columnValues;
+        Dictionary<string, object?>? columnValues;
         try
         {
-            columnValues = JsonSerializer.Deserialize<Dictionary<string, object>>(columnValuesJson,
+            columnValues = JsonSerializer.Deserialize<Dictionary<string, object?>>(columnValuesJson,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             if (columnValues == null || columnValues.Count == 0)
@@ -85,10 +85,10 @@ public static class RowTool
         if (string.IsNullOrWhiteSpace(tableName) || string.IsNullOrWhiteSpace(columnValuesJson))
             return "Error: Table name and column values (as JSON) are required.";
 
-        Dictionary<string, object> columnValues;
+        Dictionary<string, object?>? columnValues;
         try
         {
-            columnValues = JsonSerializer.Deserialize<Dictionary<string, object>>(columnValuesJson, 
+            columnValues = JsonSerializer.Deserialize<Dictionary<string, object?>>(columnValuesJson, 
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             
             if (columnValues == null || columnValues.Count == 0)

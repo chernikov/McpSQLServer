@@ -19,7 +19,7 @@ namespace McpSQLServerApp.Helpers
 
         public static string GetDefaultConnectionString()
         {
-            return _connectionString ?? "Server=localhost,1433;Database=master;Trusted_Connection=True;TrustServerCertificate=True;";
+            return _connectionString ?? "Server=IRON;Database=master;Trusted_Connection=true;MultipleActiveResultSets=true;TrustServerCertificate=true;Encrypt=false;";
         }
     }
 }

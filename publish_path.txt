@@ -1,0 +1,1 @@
+C:\mcp-servers\McpSqlServer

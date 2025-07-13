@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using McpSQLServerApp.Helpers;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Server;
@@ -13,6 +14,9 @@ builder.Logging.ClearProviders();
 if (args.Contains("-l"))
 {
     builder.Logging.AddConsole();
+
+    var connectionString = ConfigHelper.GetDefaultConnectionString();
+    Console.WriteLine($"Using connection string: {connectionString}");
 
     Console.WriteLine("Available tools:");
     var assembly = Assembly.GetExecutingAssembly();

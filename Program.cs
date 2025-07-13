@@ -13,6 +13,21 @@ builder.Logging.ClearProviders();
 if (args.Contains("-l"))
 {
     builder.Logging.AddConsole();
+
+    Console.WriteLine("Available tools:");
+    var assembly = Assembly.GetExecutingAssembly();
+    var toolTypes = assembly.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<McpServerToolTypeAttribute>() != null);
+
+    foreach (var type in toolTypes)
+    {
+        var methods = type.GetMethods().Where(m => m.GetCustomAttribute<McpServerToolAttribute>() != null);
+        foreach (var method in methods)
+        {
+            var description = method.GetCustomAttribute<DescriptionAttribute>()?.Description ?? "No description.";
+            Console.WriteLine($"- {type.Name}.{method.Name}: {description}");
+        }
+    }
+    Console.WriteLine();
 }
 
 builder.Services
@@ -21,20 +36,5 @@ builder.Services
     .WithToolsFromAssembly();
 
 var app = builder.Build();
-
-Console.WriteLine("Available tools:");
-var assembly = Assembly.GetExecutingAssembly();
-var toolTypes = assembly.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<McpServerToolTypeAttribute>() != null);
-
-foreach (var type in toolTypes)
-{
-    var methods = type.GetMethods().Where(m => m.GetCustomAttribute<McpServerToolAttribute>() != null);
-    foreach (var method in methods)
-    {
-        var description = method.GetCustomAttribute<DescriptionAttribute>()?.Description ?? "No description.";
-        Console.WriteLine($"- {type.Name}.{method.Name}: {description}");
-    }
-}
-Console.WriteLine();
 
 await app.RunAsync();
